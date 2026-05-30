@@ -6,22 +6,22 @@
     <title>Advanced Questions Tracker</title>
     <style>
         :root {
-            --bg-dark: #0f1115;
-            --card-bg: #161920;
-            --input-bg: #1e222b;
-            --border-color: #262c37;
-            --text-main: #ffffff;
-            --text-muted: #7c8ba1;
+            --bg-dark: #090d16;
+            --card-bg: #111827;
+            --input-bg: #1f2937;
+            --border-color: #1f2937;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
             
-            /* Subject Branding Colors */
-            --color-maths: #c084fc;
-            --color-physics: #fbbf24;
-            --color-chemistry: #38bdf8;
+            /* Enhanced Subject Branding Colors */
+            --color-maths: #a855f7;
+            --color-physics: #f59e0b;
+            --color-chemistry: #06b6d4;
             
-            --accent-green: #22c55e;
+            --accent-green: #10b981;
             --accent-red: #ef4444;
             --btn-primary: #ffffff;
-            --btn-primary-text: #0f1115;
+            --btn-primary-text: #090d16;
         }
 
         * {
@@ -53,13 +53,16 @@
             border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
         }
 
         .card-title {
             font-size: 16px;
             font-weight: 600;
             margin-bottom: 20px;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--text-main);
         }
 
         .sub-label {
@@ -96,15 +99,16 @@
             color: var(--text-main);
             font-size: 14px;
             outline: none;
-            transition: border 0.2s;
+            transition: all 0.2s;
         }
 
         .input-field input:focus {
-            border-color: #60a5fa;
+            border-color: var(--text-muted);
+            box-shadow: 0 0 0 2px rgba(156, 163, 175, 0.2);
         }
 
         input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(0.8);
+            filter: invert(0.9);
             cursor: pointer;
         }
 
@@ -122,17 +126,17 @@
             font-weight: 500;
             cursor: pointer;
             border: none;
-            transition: background 0.2s, transform 0.1s;
+            transition: all 0.2s;
         }
 
-        .btn:active { transform: scale(0.98); }
+        .btn:active { transform: scale(0.97); }
 
         .btn-main {
             background-color: var(--btn-primary);
             color: var(--btn-primary-text);
         }
 
-        .btn-main:hover { background-color: #e2e8f0; }
+        .btn-main:hover { background-color: #e5e7eb; }
 
         .btn-sub {
             background-color: var(--input-bg);
@@ -140,7 +144,7 @@
             border: 1px solid var(--border-color);
         }
 
-        .btn-sub:hover { background-color: var(--border-color); }
+        .btn-sub:hover { background-color: #374151; }
 
         /* Performance Module Grid */
         .metrics-summary-grid {
@@ -151,20 +155,28 @@
         }
 
         .subject-metric-panel {
-            background-color: rgba(255,255,255,0.01);
-            border: 1px solid var(--border-color);
+            background-color: #1f2937;
             border-radius: 12px;
-            padding: 16px;
+            padding: 20px;
+            border: 1px solid transparent;
         }
 
         .subject-metric-panel h4 {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 700;
             margin-bottom: 16px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
+        /* Subject Specific Highlights */
+        .panel-maths { border-top: 4px solid var(--color-maths); }
         .panel-maths h4 { color: var(--color-maths); }
+        
+        .panel-physics { border-top: 4px solid var(--color-physics); }
         .panel-physics h4 { color: var(--color-physics); }
+        
+        .panel-chemistry { border-top: 4px solid var(--color-chemistry); }
         .panel-chemistry h4 { color: var(--color-chemistry); }
 
         .metric-item {
@@ -173,17 +185,25 @@
             font-size: 13px;
             padding: 8px 0;
             color: var(--text-muted);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .metric-item:last-of-type {
+            border-bottom: none;
         }
 
         .metric-item span.val {
             color: var(--text-main);
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 14px;
         }
 
         .comparison-status {
             font-size: 12px;
-            margin-top: 8px;
+            margin-top: 14px;
             font-weight: 500;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
         .status-positive { color: var(--accent-green); }
         .status-negative { color: var(--accent-red); }
@@ -204,12 +224,13 @@
             border-radius: 8px;
             font-size: 13px;
             cursor: pointer;
+            transition: all 0.2s;
         }
 
         .tab-btn.active {
             background-color: var(--text-main);
             color: var(--bg-dark);
-            font-weight: 500;
+            font-weight: 600;
         }
 
         /* Log Table Styling */
@@ -226,35 +247,37 @@
 
         .log-table th {
             color: var(--text-muted);
-            font-weight: 500;
+            font-weight: 600;
             padding: 12px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 2px solid var(--border-color);
             text-transform: uppercase;
             font-size: 11px;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.75px;
         }
 
         .log-table td {
             padding: 14px 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.02);
+            border-bottom: 1px solid var(--border-color);
             color: var(--text-main);
         }
 
-        .log-table tr:last-child td { border: none; }
+        .log-table tr:hover td {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
 
-        /* Distribution Distribution Visualization Map Mock up */
+        /* Distribution Chart Component */
         .distribution-visualizer-container {
             display: flex;
             flex-direction: column;
             gap: 20px;
             align-items: center;
-            padding: 20px 0;
+            padding: 10px 0;
         }
 
         .legend-container {
             display: flex;
             gap: 24px;
-            font-size: 12px;
+            font-size: 13px;
         }
 
         .legend-indicator {
@@ -266,22 +289,21 @@
         .color-dot {
             width: 12px;
             height: 12px;
-            border-radius: 3px;
+            border-radius: 50%;
         }
 
         .bar-chart-representation {
             width: 100%;
-            max-width: 500px;
-            height: 24px;
+            height: 16px;
             background-color: var(--input-bg);
-            border-radius: 12px;
+            border-radius: 8px;
             overflow: hidden;
             display: flex;
         }
 
         .chart-segment {
             height: 100%;
-            transition: width 0.4s ease;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
     </style>
 </head>
@@ -324,7 +346,7 @@
                 <label class="sub-label">Select Any Date To View Week</label>
                 <input type="date" id="field-analytics-date">
             </div>
-            <div class="sub-label" id="label-week-span" style="margin-bottom: 16px;">Showing Week: --/--/---- → --/--/----</div>
+            <div class="sub-label" id="label-week-span" style="margin-bottom: 16px; font-weight: 500;">Showing Week: --/--/---- → --/--/----</div>
 
             <div class="metrics-summary-grid">
                 <div class="subject-metric-panel panel-maths">
@@ -501,9 +523,8 @@
         }
 
         function renderPerformanceMetrics(refDateStr, currentWeek) {
-            const currentMonthHex = refDateStr.substring(0, 7); // yyyy-mm layout matching signature
+            const currentMonthHex = refDateStr.substring(0, 7);
             
-            // Generate Prior Target Week Frame for contextual analytics comparisons
             const refDateObj = new Date(refDateStr);
             refDateObj.setDate(refDateObj.getDate() - 7);
             const pastWeek = calculateTargetWeekRange(refDateObj);
@@ -514,23 +535,47 @@
                 chemistry: { w: 0, m: 0, pw: 0 }
             };
 
-            // Aggregate metrics from store
+            let activeDaysCount = 0;
+            let activePastDaysCount = 0;
+
+            // First pass: check how many days in the current week actually have entries logged
+            currentWeek.daysArray.forEach(dateKey => {
+                if (DATA_STORE[dateKey]) {
+                    const entry = DATA_STORE[dateKey];
+                    if (entry.maths > 0 || entry.physics > 0 || entry.chemistry > 0) {
+                        activeDaysCount++;
+                    }
+                }
+            });
+
+            // Check active days for the previous comparison week
+            pastWeek.daysArray.forEach(dateKey => {
+                if (DATA_STORE[dateKey]) {
+                    const entry = DATA_STORE[dateKey];
+                    if (entry.maths > 0 || entry.physics > 0 || entry.chemistry > 0) {
+                        activePastDaysCount++;
+                    }
+                }
+            });
+
+            // Prevent dividing by zero if it's a completely clean week
+            if (activeDaysCount === 0) activeDaysCount = 1;
+            if (activePastDaysCount === 0) activePastDaysCount = 1;
+
+            // Aggregate values from store
             Object.keys(DATA_STORE).forEach(dateKey => {
                 const entry = DATA_STORE[dateKey];
                 
-                // Current Week Matcher
                 if (currentWeek.daysArray.includes(dateKey)) {
                     metrics.maths.w += entry.maths;
                     metrics.physics.w += entry.physics;
                     metrics.chemistry.w += entry.chemistry;
                 }
-                // Historical Comparative Week Matcher
                 if (pastWeek.daysArray.includes(dateKey)) {
                     metrics.maths.pw += entry.maths;
                     metrics.physics.pw += entry.physics;
                     metrics.chemistry.pw += entry.chemistry;
                 }
-                // Current Month Bound Matcher
                 if (dateKey.startsWith(currentMonthHex)) {
                     metrics.maths.m += entry.maths;
                     metrics.physics.m += entry.physics;
@@ -538,38 +583,42 @@
                 }
             });
 
-            // Update UI values
+            // Update UI components
             ['maths', 'physics', 'chemistry'].forEach(sub => {
                 const weeklyTotal = metrics[sub].w;
                 const monthlyTotal = metrics[sub].m;
-                const dailyAvg = (weeklyTotal / 7).toFixed(1);
+                
+                // Calculates average based entirely on active logged-in study blocks!
+                const dailyAvg = (weeklyTotal / activeDaysCount).toFixed(1);
+                const pastDailyAvg = (metrics[sub].pw / activePastDaysCount).toFixed(1);
 
                 document.getElementById(`m-wtotal-${sub}`).innerText = weeklyTotal;
                 document.getElementById(`m-wavg-${sub}`).innerText = dailyAvg;
                 document.getElementById(`m-mtotal-${sub}`).innerText = monthlyTotal;
 
-                applyComparisonInsight(sub, weeklyTotal, metrics[sub].pw);
+                applyComparisonInsight(sub, parseFloat(dailyAvg), parseFloat(pastDailyAvg));
             });
         }
 
-        function applyComparisonInsight(subject, currentVal, pastVal) {
+        function applyComparisonInsight(subject, currentAvg, pastAvg) {
             const container = document.getElementById(`m-comp-${subject}`);
-            if (pastVal === 0) {
+            if (pastAvg === 0) {
                 container.className = "comparison-status style-neutral";
                 container.innerText = "No baseline data last week";
                 return;
             }
 
-            const percentageShift = (((currentVal - pastVal) / pastVal) * 100).toFixed(1);
-            if (percentageShift > 0) {
+            if (currentAvg > pastAvg) {
+                const percentageShift = (((currentAvg - pastAvg) / pastAvg) * 100).toFixed(1);
                 container.className = "comparison-status status-positive";
-                container.innerText = `▲ ${percentageShift}% Higher than last week`;
-            } else if (percentageShift < 0) {
+                container.innerText = `▲ ${percentageShift}% Avg increase`;
+            } else if (currentAvg < pastAvg) {
+                const percentageShift = (((pastAvg - currentAvg) / pastAvg) * 100).toFixed(1);
                 container.className = "comparison-status status-negative";
-                container.innerText = `▼ ${Math.abs(percentageShift)}% Lower than last week`;
+                container.innerText = `▼ ${percentageShift}% Avg decrease`;
             } else {
                 container.className = "comparison-status status-neutral";
-                container.innerText = "Matches past week performance";
+                container.innerText = "Matches past week average";
             }
         }
 
@@ -577,7 +626,6 @@
             const tableBody = document.getElementById('render-target-table');
             const targetDates = [];
             
-            // Generate sequence tracking back exactly 7 days from today
             for (let i = 0; i < 7; i++) {
                 const d = new Date();
                 d.setDate(d.getDate() - i);
@@ -622,14 +670,12 @@
             
             const pctM = collectiveTotal > 0 ? Math.round((mSum / collectiveTotal) * 100) : 0;
             const pctP = collectiveTotal > 0 ? Math.round((pSum / collectiveTotal) * 100) : 0;
-            const pctC = collectiveTotal > 0 ? 100 - (pctM + pctP) : 0; // Lock structural 100 sum boundary
+            const pctC = collectiveTotal > 0 ? 100 - (pctM + pctP) : 0;
 
-            // Update Text Percentages
             document.getElementById('pct-label-maths').innerText = `${pctM}%`;
             document.getElementById('pct-label-physics').innerText = `${pctP}%`;
             document.getElementById('pct-label-chemistry').innerText = `${pctC}%`;
 
-            // Adjust Bar Width Components
             document.getElementById('segment-maths').style.width = `${pctM}%`;
             document.getElementById('segment-physics').style.width = `${pctP}%`;
             document.getElementById('segment-chemistry').style.width = `${pctC}%`;
@@ -641,6 +687,7 @@
             return `${dd}/${mm}/${yyyy}`;
         }
 
+        // System Backup Portability Handlers
         function exportDatabaseBackup() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(DATA_STORE));
             const downloadAnchorNode = document.createElement('a');

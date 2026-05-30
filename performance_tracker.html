@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Questions Tracker</title>
+    <style>
+        :root {
+            --bg-dark: #0f1115;
+            --card-bg: #161920;
+            --input-bg: #1e222b;
+            --border-color: #262c37;
+            --text-main: #ffffff;
+            --text-muted: #7c8ba1;
+            
+            /* Subject Branding Colors */
+            --color-maths: #c084fc;
+            --color-physics: #fbbf24;
+            --color-chemistry: #38bdf8;
+            
+            --accent-green: #22c55e;
+            --accent-red: #ef4444;
+            --btn-primary: #ffffff;
+            --btn-primary-text: #0f1115;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Generic Component Card Styling */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            letter-spacing: 0.3px;
+        }
+
+        .sub-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        /* Forms Layout Grid */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-field label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .input-field input {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .input-field input:focus {
+            border-color: #60a5fa;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.8);
+            cursor: pointer;
+        }
+
+        /* Control UI Actions */
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn:active { transform: scale(0.98); }
+
+        .btn-main {
+            background-color: var(--btn-primary);
+            color: var(--btn-primary-text);
+        }
+
+        .btn-main:hover { background-color: #e2e8f0; }
+
+        .btn-sub {
+            background-color: var(--input-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-sub:hover { background-color: var(--border-color); }
+
+        /* Performance Module Grid */
+        .metrics-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .subject-metric-panel {
+            background-color: rgba(255,255,255,0.01);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .subject-metric-panel h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .panel-maths h4 { color: var(--color-maths); }
+        .panel-physics h4 { color: var(--color-physics); }
+        .panel-chemistry h4 { color: var(--color-chemistry); }
+
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 8px 0;
+            color: var(--text-muted);
+        }
+
+        .metric-item span.val {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .comparison-status {
+            font-size: 12px;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+        .status-positive { color: var(--accent-green); }
+        .status-negative { color: var(--accent-red); }
+        .status-neutral { color: var(--text-muted); }
+
+        /* Tab Filter Utility Styling */
+        .tab-filter-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            background-color: var(--input-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            background-color: var(--text-main);
+            color: var(--bg-dark);
+            font-weight: 500;
+        }
+
+        /* Log Table Styling */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .log-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .log-table th {
+            color: var(--text-muted);
+            font-weight: 500;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        .log-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+            color: var(--text-main);
+        }
+
+        .log-table tr:last-child td { border: none; }
+
+        /* Distribution Distribution Visualization Map Mock up */
+        .distribution-visualizer-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .legend-container {
+            display: flex;
+            gap: 24px;
+            font-size: 12px;
+        }
+
+        .legend-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        .bar-chart-representation {
+            width: 100%;
+            max-width: 500px;
+            height: 24px;
+            background-color: var(--input-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .chart-segment {
+            height: 100%;
+            transition: width 0.4s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <section class="card">
+            <h3 class="card-title">Daily Entry</h3>
+            <div class="form-row">
+                <div class="input-field">
+                    <label>Select Date</label>
+                    <input type="date" id="field-entry-date">
+                </div>
+                <div class="input-field">
+                    <label>Maths</label>
+                    <input type="number" id="field-count-maths" placeholder="Enter questions">
+                </div>
+                <div class="input-field">
+                    <label>Physics</label>
+                    <input type="number" id="field-count-physics" placeholder="Enter questions">
+                </div>
+                <div class="input-field">
+                    <label>Chemistry</label>
+                    <input type="number" id="field-count-chemistry" placeholder="Enter questions">
+                </div>
+            </div>
+            <div class="action-bar">
+                <button class="btn btn-main" id="action-save">Save Entry</button>
+                <button class="btn btn-sub" id="action-clear">Clear Fields</button>
+                <button class="btn btn-sub" id="action-export">Export Data</button>
+                <button class="btn btn-sub" id="action-import">Import Data</button>
+                <input type="file" id="hidden-file-input" style="display: none;" accept=".json">
+            </div>
+        </section>
+
+        <section class="card">
+            <h3 class="card-title">Weekly & Monthly Performance</h3>
+            <div class="input-field" style="max-width: 240px; margin-bottom: 16px;">
+                <label class="sub-label">Select Any Date To View Week</label>
+                <input type="date" id="field-analytics-date">
+            </div>
+            <div class="sub-label" id="label-week-span" style="margin-bottom: 16px;">Showing Week: --/--/---- → --/--/----</div>
+
+            <div class="metrics-summary-grid">
+                <div class="subject-metric-panel panel-maths">
+                    <h4>Maths</h4>
+                    <div class="metric-item"><span>Weekly Total</span><span class="val" id="m-wtotal-maths">0</span></div>
+                    <div class="metric-item"><span>Average / Day</span><span class="val" id="m-wavg-maths">0.0</span></div>
+                    <div class="metric-item"><span>Monthly Total</span><span class="val" id="m-mtotal-maths">0</span></div>
+                    <div class="comparison-status id-comp-maths" id="m-comp-maths">No previous data</div>
+                </div>
+
+                <div class="subject-metric-panel panel-physics">
+                    <h4>Physics</h4>
+                    <div class="metric-item"><span>Weekly Total</span><span class="val" id="m-wtotal-physics">0</span></div>
+                    <div class="metric-item"><span>Average / Day</span><span class="val" id="m-wavg-physics">0.0</span></div>
+                    <div class="metric-item"><span>Monthly Total</span><span class="val" id="m-mtotal-physics">0</span></div>
+                    <div class="comparison-status id-comp-physics" id="m-comp-physics">No previous data</div>
+                </div>
+
+                <div class="subject-metric-panel panel-chemistry">
+                    <h4>Chemistry</h4>
+                    <div class="metric-item"><span>Weekly Total</span><span class="val" id="m-wtotal-chemistry">0</span></div>
+                    <div class="metric-item"><span>Average / Day</span><span class="val" id="m-wavg-chemistry">0.0</span></div>
+                    <div class="metric-item"><span>Monthly Total</span><span class="val" id="m-mtotal-chemistry">0</span></div>
+                    <div class="comparison-status id-comp-chemistry" id="m-comp-chemistry">No previous data</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h3 class="card-title">Last 7 Days Entries</h3>
+            <div class="table-wrapper">
+                <table class="log-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>PHY</th>
+                            <th>CHE</th>
+                            <th>MATHS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="render-target-table">
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 20px;">No logs recorded yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card">
+            <h3 class="card-title">Subject Distribution</h3>
+            <div class="tab-filter-row">
+                <button class="tab-btn active" data-range="week">Week</button>
+                <button class="tab-btn" data-range="month">Month</button>
+                <button class="tab-btn" data-range="overall">Overall</button>
+            </div>
+            
+            <div class="distribution-visualizer-container">
+                <div class="legend-container">
+                    <div class="legend-indicator">
+                        <div class="color-dot" style="background-color: var(--color-maths);"></div>
+                        <span>Maths (<span id="pct-label-maths">0%</span>)</span>
+                    </div>
+                    <div class="legend-indicator">
+                        <div class="color-dot" style="background-color: var(--color-physics);"></div>
+                        <span>Physics (<span id="pct-label-physics">0%</span>)</span>
+                    </div>
+                    <div class="legend-indicator">
+                        <div class="color-dot" style="background-color: var(--color-chemistry);"></div>
+                        <span>Chemistry (<span id="pct-label-chemistry">0%</span>)</span>
+                    </div>
+                </div>
+
+                <div class="bar-chart-representation">
+                    <div id="segment-maths" class="chart-segment" style="background-color: var(--color-maths); width: 0%;"></div>
+                    <div id="segment-physics" class="chart-segment" style="background-color: var(--color-physics); width: 0%;"></div>
+                    <div id="segment-chemistry" class="chart-segment" style="background-color: var(--color-chemistry); width: 0%;"></div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        let DATA_STORE = JSON.parse(localStorage.getItem('study_tracker_data')) || {};
+        let ActiveDistributionRange = 'week';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeDatePickers();
+            attachUIEventListeners();
+            syncDashboardView();
+        });
+
+        function initializeDatePickers() {
+            const todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('field-entry-date').value = todayStr;
+            document.getElementById('field-analytics-date').value = todayStr;
+        }
+
+        function attachUIEventListeners() {
+            document.getElementById('action-save').addEventListener('click', commitDailyData);
+            document.getElementById('action-clear').addEventListener('click', clearInputFields);
+            document.getElementById('field-analytics-date').addEventListener('change', syncDashboardView);
+            
+            // Backup management connections
+            document.getElementById('action-export').addEventListener('click', exportDatabaseBackup);
+            document.getElementById('action-import').addEventListener('click', () => document.getElementById('hidden-file-input').click());
+            document.getElementById('hidden-file-input').addEventListener('change', importDatabaseBackup);
+
+            // Chart range triggers
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    ActiveDistributionRange = e.target.getAttribute('data-range');
+                    calculateProportionalDistribution();
+                });
+            });
+        }
+
+        function commitDailyData() {
+            const selectedDate = document.getElementById('field-entry-date').value;
+            if (!selectedDate) return alert('Please assign a baseline date value.');
+
+            const mVal = parseInt(document.getElementById('field-count-maths').value) || 0;
+            const pVal = parseInt(document.getElementById('field-count-physics').value) || 0;
+            const cVal = parseInt(document.getElementById('field-count-chemistry').value) || 0;
+
+            DATA_STORE[selectedDate] = { maths: mVal, physics: pVal, chemistry: cVal };
+            localStorage.setItem('study_tracker_data', JSON.stringify(DATA_STORE));
+            
+            syncDashboardView();
+            alert(`Record committed for ${formatDisplayDate(selectedDate)}.`);
+        }
+
+        function clearInputFields() {
+            document.getElementById('field-count-maths').value = '';
+            document.getElementById('field-count-physics').value = '';
+            document.getElementById('field-count-chemistry').value = '';
+        }
+
+        function syncDashboardView() {
+            const referenceDate = document.getElementById('field-analytics-date').value;
+            if(!referenceDate) return;
+
+            const weekBoundaries = calculateTargetWeekRange(new Date(referenceDate));
+            document.getElementById('label-week-span').innerText = 
+                `Showing Week: ${formatDisplayDate(weekBoundaries.startStr)} → ${formatDisplayDate(weekBoundaries.endStr)}`;
+
+            renderPerformanceMetrics(referenceDate, weekBoundaries);
+            renderLogTable();
+            calculateProportionalDistribution();
+        }
+
+        function calculateTargetWeekRange(targetDate) {
+            const currentDay = targetDate.getDay();
+            const distanceToMonday = currentDay === 0 ? -6 : 1 - currentDay; 
+            
+            const monday = new Date(targetDate);
+            monday.setDate(targetDate.getDate() + distanceToMonday);
+            
+            const sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
+
+            return {
+                startStr: monday.toISOString().split('T')[0],
+                endStr: sunday.toISOString().split('T')[0],
+                daysArray: Array.from({length: 7}, (_, idx) => {
+                    const d = new Date(monday);
+                    d.setDate(monday.getDate() + idx);
+                    return d.toISOString().split('T')[0];
+                })
+            };
+        }
+
+        function renderPerformanceMetrics(refDateStr, currentWeek) {
+            const currentMonthHex = refDateStr.substring(0, 7); // yyyy-mm layout matching signature
+            
+            // Generate Prior Target Week Frame for contextual analytics comparisons
+            const refDateObj = new Date(refDateStr);
+            refDateObj.setDate(refDateObj.getDate() - 7);
+            const pastWeek = calculateTargetWeekRange(refDateObj);
+
+            const metrics = {
+                maths: { w: 0, m: 0, pw: 0 },
+                physics: { w: 0, m: 0, pw: 0 },
+                chemistry: { w: 0, m: 0, pw: 0 }
+            };
+
+            // Aggregate metrics from store
+            Object.keys(DATA_STORE).forEach(dateKey => {
+                const entry = DATA_STORE[dateKey];
+                
+                // Current Week Matcher
+                if (currentWeek.daysArray.includes(dateKey)) {
+                    metrics.maths.w += entry.maths;
+                    metrics.physics.w += entry.physics;
+                    metrics.chemistry.w += entry.chemistry;
+                }
+                // Historical Comparative Week Matcher
+                if (pastWeek.daysArray.includes(dateKey)) {
+                    metrics.maths.pw += entry.maths;
+                    metrics.physics.pw += entry.physics;
+                    metrics.chemistry.pw += entry.chemistry;
+                }
+                // Current Month Bound Matcher
+                if (dateKey.startsWith(currentMonthHex)) {
+                    metrics.maths.m += entry.maths;
+                    metrics.physics.m += entry.physics;
+                    metrics.chemistry.m += entry.chemistry;
+                }
+            });
+
+            // Update UI values
+            ['maths', 'physics', 'chemistry'].forEach(sub => {
+                const weeklyTotal = metrics[sub].w;
+                const monthlyTotal = metrics[sub].m;
+                const dailyAvg = (weeklyTotal / 7).toFixed(1);
+
+                document.getElementById(`m-wtotal-${sub}`).innerText = weeklyTotal;
+                document.getElementById(`m-wavg-${sub}`).innerText = dailyAvg;
+                document.getElementById(`m-mtotal-${sub}`).innerText = monthlyTotal;
+
+                applyComparisonInsight(sub, weeklyTotal, metrics[sub].pw);
+            });
+        }
+
+        function applyComparisonInsight(subject, currentVal, pastVal) {
+            const container = document.getElementById(`m-comp-${subject}`);
+            if (pastVal === 0) {
+                container.className = "comparison-status style-neutral";
+                container.innerText = "No baseline data last week";
+                return;
+            }
+
+            const percentageShift = (((currentVal - pastVal) / pastVal) * 100).toFixed(1);
+            if (percentageShift > 0) {
+                container.className = "comparison-status status-positive";
+                container.innerText = `▲ ${percentageShift}% Higher than last week`;
+            } else if (percentageShift < 0) {
+                container.className = "comparison-status status-negative";
+                container.innerText = `▼ ${Math.abs(percentageShift)}% Lower than last week`;
+            } else {
+                container.className = "comparison-status status-neutral";
+                container.innerText = "Matches past week performance";
+            }
+        }
+
+        function renderLogTable() {
+            const tableBody = document.getElementById('render-target-table');
+            const targetDates = [];
+            
+            // Generate sequence tracking back exactly 7 days from today
+            for (let i = 0; i < 7; i++) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                targetDates.push(d.toISOString().split('T')[0]);
+            }
+
+            let htmlBuffer = '';
+            targetDates.forEach(dateKey => {
+                const entry = DATA_STORE[dateKey] || { physics: 0, chemistry: 0, maths: 0 };
+                htmlBuffer += `
+                    <tr>
+                        <td><strong>${formatDisplayDate(dateKey)}</strong></td>
+                        <td>${entry.physics}</td>
+                        <td>${entry.chemistry}</td>
+                        <td>${entry.maths}</td>
+                    </tr>
+                `;
+            });
+            tableBody.innerHTML = htmlBuffer;
+        }
+
+        function calculateProportionalDistribution() {
+            let mSum = 0, pSum = 0, cSum = 0;
+            const currentAnalyticsDate = document.getElementById('field-analytics-date').value;
+            
+            let filterScopeList = [];
+            if (ActiveDistributionRange === 'week' && currentAnalyticsDate) {
+                filterScopeList = calculateTargetWeekRange(new Date(currentAnalyticsDate)).daysArray;
+            } else if (ActiveDistributionRange === 'month' && currentAnalyticsDate) {
+                const monthHex = currentAnalyticsDate.substring(0, 7);
+                filterScopeList = Object.keys(DATA_STORE).filter(k => k.startsWith(monthHex));
+            }
+
+            Object.keys(DATA_STORE).forEach(dateKey => {
+                if (ActiveDistributionRange !== 'overall' && !filterScopeList.includes(dateKey)) return;
+                mSum += DATA_STORE[dateKey].maths;
+                pSum += DATA_STORE[dateKey].physics;
+                cSum += DATA_STORE[dateKey].chemistry;
+            });
+
+            const collectiveTotal = mSum + pSum + cSum;
+            
+            const pctM = collectiveTotal > 0 ? Math.round((mSum / collectiveTotal) * 100) : 0;
+            const pctP = collectiveTotal > 0 ? Math.round((pSum / collectiveTotal) * 100) : 0;
+            const pctC = collectiveTotal > 0 ? 100 - (pctM + pctP) : 0; // Lock structural 100 sum boundary
+
+            // Update Text Percentages
+            document.getElementById('pct-label-maths').innerText = `${pctM}%`;
+            document.getElementById('pct-label-physics').innerText = `${pctP}%`;
+            document.getElementById('pct-label-chemistry').innerText = `${pctC}%`;
+
+            // Adjust Bar Width Components
+            document.getElementById('segment-maths').style.width = `${pctM}%`;
+            document.getElementById('segment-physics').style.width = `${pctP}%`;
+            document.getElementById('segment-chemistry').style.width = `${pctC}%`;
+        }
+
+        function formatDisplayDate(dateString) {
+            if (!dateString) return '';
+            const [yyyy, mm, dd] = dateString.split('-');
+            return `${dd}/${mm}/${yyyy}`;
+        }
+
+        function exportDatabaseBackup() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(DATA_STORE));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", `tracker_backup_${new Date().toISOString().split('T')[0]}.json`);
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        function importDatabaseBackup(event) {
+            const fileReader = new FileReader();
+            fileReader.onload = function(e) {
+                try {
+                    const parsedData = JSON.parse(e.target.result);
+                    if (typeof parsedData === 'object' && parsedData !== null) {
+                        DATA_STORE = parsedData;
+                        localStorage.setItem('study_tracker_data', JSON.stringify(DATA_STORE));
+                        syncDashboardView();
+                        alert('Database configuration mapping restored successfully!');
+                    }
+                } catch (err) {
+                    alert('Invalid JSON backup file structural trace.');
+                }
+            };
+            fileReader.readAsText(event.target.files[0]);
+        }
+    </script>
+</body>
+</html>

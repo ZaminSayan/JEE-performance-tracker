@@ -20,6 +20,7 @@
             
             --accent-green: #10b981;
             --accent-red: #ef4444;
+            --accent-red-hover: #dc2626;
             --btn-primary: #ffffff;
             --btn-primary-text: #090d16;
         }
@@ -145,6 +146,13 @@
         }
 
         .btn-sub:hover { background-color: #374151; }
+
+        .btn-danger {
+            background-color: var(--accent-red);
+            color: var(--text-main);
+        }
+
+        .btn-danger:hover { background-color: var(--accent-red-hover); }
 
         /* Performance Module Grid */
         .metrics-summary-grid {
@@ -336,6 +344,7 @@
                 <button class="btn btn-sub" id="action-clear">Clear Fields</button>
                 <button class="btn btn-sub" id="action-export">Export Data</button>
                 <button class="btn btn-sub" id="action-import">Import Data</button>
+                <button class="btn btn-danger" id="action-reset">Reset Database</button>
                 <input type="file" id="hidden-file-input" style="display: none;" accept=".json">
             </div>
         </section>
@@ -451,10 +460,11 @@
             document.getElementById('action-clear').addEventListener('click', clearInputFields);
             document.getElementById('field-analytics-date').addEventListener('change', syncDashboardView);
             
-            // Backup management connections
+            // Backup and reset database controllers
             document.getElementById('action-export').addEventListener('click', exportDatabaseBackup);
             document.getElementById('action-import').addEventListener('click', () => document.getElementById('hidden-file-input').click());
             document.getElementById('hidden-file-input').addEventListener('change', importDatabaseBackup);
+            document.getElementById('action-reset').addEventListener('click', purgeEntireDatabase);
 
             // Chart range triggers
             document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -486,6 +496,23 @@
             document.getElementById('field-count-maths').value = '';
             document.getElementById('field-count-physics').value = '';
             document.getElementById('field-count-chemistry').value = '';
+        }
+
+        function purgeEntireDatabase() {
+            const verificationPhrase = "wipemydata";
+            const userConfirmation = confirm("WARNING: This will permanently drop all question statistics logs stored on this browser container. Are you absolutely sure?");
+            
+            if (userConfirmation) {
+                const secondVerification = prompt(`To finalize deletion, please type "${verificationPhrase}" in the box below:`);
+                if (secondVerification === verificationPhrase) {
+                    DATA_STORE = {};
+                    localStorage.removeItem('study_tracker_data');
+                    syncDashboardView();
+                    alert("Database dropped. Your metrics have been successfully reset to 0.");
+                } else {
+                    alert("Verification mismatch. Clear action cancelled.");
+                }
+            }
         }
 
         function syncDashboardView() {
